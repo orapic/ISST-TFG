@@ -31,7 +31,7 @@ tr:nth-child(even) {
 </head>
 <body>
 
-<p>TFAGs management system</p>
+<p>TFGs management system</p>
 	<c:if test="${not empty user}">
 		<p> Hola Señor <c:out value="${user}" /> </p>
 		<c:if test="${empty tfgs }">
@@ -56,7 +56,17 @@ tr:nth-child(even) {
 				<p>Secretario: <c:out value="${tfg.secretario }"></c:out></p>
 				<p>Estado: <c:out value="${tfg.estado }"></c:out></p>
 			</c:if>
-			
+
+			<c:if test="${not empty user and not empty tfg and tfg.estado == 2}">
+				Document upload form. <c:out value="${tfg.memoria}" />
+				<form action="<%=blobstoreService.createUploadUrl("/upload")%>"
+					method="post" enctype="multipart/form-data">
+					<input id="autor" name="autor" type="hidden" value="${tfg.autor}" />
+					<input type="file" name="file" /> <input type="submit"
+						value="Upload document" />
+				</form>
+			</c:if>
+
 		</c:if>
 		<c:if test="${not empty tfgs }">
 		<p>Ha sido reconocido como profesor</p>
@@ -70,32 +80,24 @@ tr:nth-child(even) {
 			</tr>
 			
 			<c:forEach items="${tfgs}" var="tfgi">
-				<tr>
-					<td><c:out value="${tfgi.autor}" /></td>
-					<td><c:out value="${tfgi.titulo}" /></td>
-					<td><c:out value="${tfgi.memoria}" /></td>
-					<td><c:out value="${tfgi.secretario}" /></td>
-					<td><c:out value="${tfgi.estado}" /></td>
-				</tr>
-			</c:forEach>
+			<tr>
+				<td><c:out value="${tfgi.autor}" /></td>
+				<td><c:out value="${tfgi.titulo}" /></td>
+				<td><c:out value="${tfgi.memoria}" /></td>
+				<td><c:out value="${tfgi.tutor}" /></td>
+				<td><c:out value="${tfgi.estado}" /></td>
+			</tr>
+				</c:forEach>
 			</table>
 
 		</c:if>
 	</c:if>
 <p>You can press the next link to <c:out value="${urlLinktext}"/>, fag
 <a href="<c:url value="${url}"/>"><c:out value="${urlLinktext}"/></a></p>
-<c:if test="${empty user }"><p>Eres un pleb </p></c:if>
+<c:if test="${empty user }"><p>No estas logeado</p></c:if>
 
 
-<c:if test="${not null user and not null tfg and tfg.estado == 2}">
-	Document upload form. <c:out value="${tfg.memoria}" />
-	<form action="<%=blobstoreService.createUploadUrl("/upload")%>"
-		method="post" enctype="multipart/form-data">
-		<input id="autor" name="autor" type="hidden" value="${tfg.autor}" />
-		<input type="file" name="file" />
-              <input type="submit" value="Upload document" />
-	</form>
-</c:if>
+
 
 
 

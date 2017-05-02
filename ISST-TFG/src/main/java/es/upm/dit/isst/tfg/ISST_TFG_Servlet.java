@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -45,6 +47,12 @@ public class ISST_TFG_Servlet extends HttpServlet{
 			tfg = dao.leerPorAutor(user);
 			tfgs.addAll(dao.leerPorSecretario(user));
 			tfgs.addAll(dao.leerPorTutor(user));
+			if(tfg !=null) {
+				if(tfg.getEstado()>2) {
+					BlobKey blobKey = new BlobKey(tfg.getMemoria());
+					BlobstoreServiceFactory.getBlobstoreService().serve(blobKey, response);
+				}
+			}
 		}
 
 		request.getSession().setAttribute("user", user);
